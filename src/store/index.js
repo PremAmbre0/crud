@@ -5,8 +5,20 @@ import crud from "./modules/Crud.js"
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
+  state: {
+    showDialogForm: false,
+  },
+  mutations: {
+    openDialogForm(state) {
+      state.showDialogForm = true;
+    },
+    closeDialogForm(state) {
+      state.showDialogForm = false;
+    },
+  },
+  getters: {
+    showDialogForm: (state) => state.showDialogForm,
+  },
   actions: {},
   modules: {
     crud

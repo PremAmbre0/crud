@@ -1,18 +1,15 @@
 <template>
     <v-card class="mx-auto" outlined width="100%" elevation="4">
         <v-img :src="roomStyle.thumbnail" contain height="200px"></v-img>
-        <v-card-title>
-            {{ roomStyle.name }}
-        </v-card-title>
-        <v-card-actions>
+        <v-card-actions height="50px">
+            <v-card-title tag="div">
+                {{ roomStyle.name }}
+            </v-card-title>
+            <v-spacer></v-spacer>
             <v-btn icon>
                 <v-icon> mdi-delete</v-icon>
             </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn icon>
-                <v-icon> mdi-eye</v-icon>
-            </v-btn>
-            <v-spacer></v-spacer>
+
             <v-btn icon>
                 <v-icon> mdi-download</v-icon>
             </v-btn>
@@ -36,6 +33,12 @@ export default {
 .v-card {
     padding: 1rem 1rem 0 1rem;
 
-    &__text {}
+    &__title {
+        max-width: 80%;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 </style>""
