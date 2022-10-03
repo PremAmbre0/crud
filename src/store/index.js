@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import crud from "./modules/Crud.js"
+import crud from "./modules/Crud.js";
+import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -19,7 +20,22 @@ export default new Vuex.Store({
   getters: {
     showDialogForm: (state) => state.showDialogForm,
   },
-  actions: {},
+  actions: {
+    apiCall(context, config) {
+      return new Promise((resolve, reject) => {
+        axios({
+          ...config,
+        })
+          .then((response) => {
+            let data = response.data;
+            resolve(data);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      })
+    },
+  },
   modules: {
     crud
   },
