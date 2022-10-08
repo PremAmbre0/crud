@@ -2,23 +2,7 @@
   <v-app>
     <v-app-bar app color="primary">
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        <div class="nav-header-text">Room Type CRUD</div>
       </div>
     </v-app-bar>
 
@@ -37,3 +21,12 @@ export default {
   }),
 };
 </script>
+
+<style lang="scss" scoped>
+.nav-header-text{
+  color:$white;
+  font-weight: 600;
+  font-size: 1.7rem;
+}
+
+</style>
