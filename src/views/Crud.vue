@@ -1,13 +1,17 @@
 <template>
     <div>
         <div class="cards-container">
-            <card v-for="roomStyle in roomStyles" :key="roomStyle._id" :roomStyle="roomStyle"
-                @click.native="openDialogForm() ; setSelectedRoomStyle(roomStyle)"></card>
+            <card v-for="roomStyle in roomStyles" :key="roomStyle._id" :name="roomStyle.name" :thumbnail="roomStyle.thumbnail" 
+                @openForm="openDialogForm() ; setSelectedRoomStyle(roomStyle)" @delete="deleteData(roomStyle._id)">
+            </card>
         </div>
         <v-btn class="add-thumbnail" fab dark color="indigo" @click="removeselectedTemplate() ; openDialogForm()">
             <v-icon dark> mdi-plus </v-icon>
         </v-btn>
-        <dialog-form :roomStyle="selectedRoomStyle"></dialog-form>
+        <dialog-form :roomStyle="selectedRoomStyle" @refresh="getData();"></dialog-form>
+        <v-overlay :value="showOverlayLoader">
+            <v-progress-circular indeterminate color="#5243AA" size="64"></v-progress-circular>
+        </v-overlay>
     </div>
 </template>
 
@@ -25,26 +29,37 @@ export default {
             selectedRoomStyle: null,
         }
     },
-    beforeMount(){
+    beforeMount() {
         this.getData();
     },
     computed: {
-        ...mapGetters(["showDialogForm"]),
+        ...mapGetters(["showDialogForm", "showOverlayLoader"]),
     },
     methods: {
-        ...mapMutations(["openDialogForm"]),
-        ...mapActions("crud",["getRoomStyles"]),
+        ...mapMutations(["openDialogForm","openOverlayLoader"]),
+        ...mapActions("crud", ["getRoomStyles", "deleteRoomStyle"]),
         setSelectedRoomStyle(roomStyle) {
             this.selectedRoomStyle = roomStyle;
         },
         removeselectedTemplate() {
-            this.selectedRoomStyle = {};
+            this.selectedRoomStyle = null;
         },
-        getData(){
-            this.getRoomStyles().then((data)=>{
-                console.log(data);
+        getData() {
+            console.log("hii")
+            this.getRoomStyles().then((data) => {
                 this.roomStyles = data
             })
+        },
+        deleteData(id) {
+            if (window.confirm("Are you sure you want to delete this roomStyle")) {
+                this.openOverlayLoader();
+                this.deleteRoomStyle({
+                    _id: id
+                }).then((response) => {
+                    console.log(response)
+                    this.getData();
+                });
+            }
         }
     }
 }
