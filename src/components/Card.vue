@@ -1,17 +1,16 @@
 <template>
     <v-card class="mx-auto" outlined width="100%" elevation="4">
-        <v-img :src="roomStyle.thumbnail" contain height="200px"></v-img>
+        <v-img :src="thumbnail" contain height="200px"></v-img>
         <v-card-actions height="50px">
             <v-card-title tag="div">
-                {{ roomStyle.name }}
+                {{ name }}
             </v-card-title>
             <v-spacer></v-spacer>
-            <v-btn icon>
+            <v-btn icon @click.stop.prevent="$emit('delete')">
                 <v-icon> mdi-delete</v-icon>
             </v-btn>
-
-            <v-btn icon>
-                <v-icon> mdi-download</v-icon>
+            <v-btn icon @click.stop.prevent="$emit('openForm')"> 
+                <v-icon>  mdi-image-edit</v-icon>
             </v-btn>
         </v-card-actions>
         <!-- <v-card-text>
@@ -23,7 +22,8 @@
 <script>
 export default {
     props: {
-        roomStyle: { required: true, type: Object }
+        thumbnail: { required: true, type: String },
+        name: { required: true, type: String }
     },
 }
 
