@@ -1,7 +1,7 @@
 
 
 
-const apiEndPoint = "https://3edd-103-173-241-68.in.ngrok.io/"
+const apiEndPoint = "https://56e2-103-173-241-213.in.ngrok.io/"
 
 
 const state = {
@@ -17,22 +17,69 @@ const mutations = {
 }
 
 const actions = {
-    getRoomStyles: ({dispatch}) => {
+    getRoomStyles: ({ dispatch }) => {
         return dispatch(
             "apiCall",
             {
                 method: "get",
-                url: `${apiEndPoint}RoomStyles/v1.0/?description=desc`,
+                url: `${apiEndPoint}RoomStyles/v1.0/`,
                 headers: {}
             },
-            { root :true}
-        ).then((response)=>{
+            { root: true }
+        ).then((response) => {
             return response.data;
-        }).catch((error)=>{
+        }).catch((error) => {
             console.error(error);
         })
-    }
-
+    },
+    postRoomStyles: ({ dispatch }, data) => {
+        return dispatch(
+            "apiCall",
+            {
+                data: data,
+                method: "post",
+                url: `${apiEndPoint}RoomStyles/v1.0/`,
+                headers: {}
+            },
+            { root: true }
+        ).then((response) => {
+            return response.data;
+        }).catch((error) => {
+            console.error(error);
+        })
+    },
+    updateRoomStyles: ({ dispatch }, data) => {
+        return dispatch(
+            "apiCall",
+            {
+                data: data,
+                method: "put",
+                url: `${apiEndPoint}RoomStyles/v1.0/`,
+                headers: {}
+            },
+            { root: true }
+        ).then((response) => {
+            return response.data;
+        }).catch((error) => {
+            console.error(error);
+        })
+    },
+    deleteRoomStyle: ({ dispatch }, data) => {
+        return dispatch(
+            "apiCall",
+            {
+                data: data,
+                method: "delete",
+                url: `${apiEndPoint}RoomStyles/v1.0/`,
+                headers: {}
+            },
+            { root: true }
+        ).then((response) => {
+            return response.data;
+        }).catch((error) => {
+            console.error(error);
+        })
+    },
 }
 export default {
     namespaced: true,

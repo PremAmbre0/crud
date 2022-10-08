@@ -1,46 +1,51 @@
 <template>
-    <v-dialog v-model="showDialogForm" max-width="600" persistent>
-        <v-card max-width="600">
-            <form @submit.prevent>
-                <v-text-field width="50vw" outlined placeholder="name" label="name" v-model="formData.name">
-                </v-text-field>
-                <v-text-field width="50vw" outlined placeholder="projectId" label="projectId"
-                    v-model="formData.projectId">
-                </v-text-field>
-                <v-text-field width="50vw" outlined placeholder="_id" label="_id" v-model="formData._id">
-                </v-text-field>
-                <v-text-field width="50vw" outlined placeholder="roomType" label="roomType" v-model="formData.roomType">
-                </v-text-field>
-                <v-textarea outlined name="input-7-4" label="Description" v-model="formData.description">
-                </v-textarea>
-                <div class="droparea" @dragover.prevent @drop.stop.prevent>
-                    <div class="droparea-filled" v-if="existingFile || inputFile">
-                        <div class="file-wrapper">
-                            <v-btn class="close-btn" tile elevation="2" x-small @click="removeImage()">
-                                <v-icon>mdi-close</v-icon>
-                            </v-btn>
-                            <img ref="fileInput" class="img" :src="existingFile ? existingFile : inputFile" />
+    <div>
+        <v-dialog v-model="showDialogForm" max-width="600" persistent>
+            <v-card max-width="600">
+                <form @submit.prevent>
+                    <v-text-field width="50vw" outlined placeholder="name" label="name" v-model="formData.name">
+                    </v-text-field>
+                    <v-text-field width="50vw" outlined placeholder="projectId" label="projectId"
+                        v-model="formData.projectId">
+                    </v-text-field>
+                    <v-text-field width="50vw" outlined placeholder="roomType" label="roomType"
+                        v-model="formData.roomType">
+                    </v-text-field>
+                    <v-textarea outlined name="input-7-4" label="Description" v-model="formData.description">
+                    </v-textarea>
+                    <div class="droparea" @dragover.prevent @drop.stop.prevent>
+                        <div class="droparea-filled" v-if="existingPreviewImage || inputedPreviewImage">
+                            <div class="file-wrapper">
+                                <v-btn class="close-btn" tile elevation="2" x-small @click="removeImage()">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                                <img ref="fileInput" class="img"
+                                    :src="existingPreviewImage ? existingPreviewImage : inputedPreviewImage" />
+                            </div>
+                        </div>
+                        <div class="droparea-empty" v-else>
+                            <label for="fileInput" class="label">
+                                Click here to select and preview the file</label>
+                            <input ref="fileInput" type="file" @input="pickImagefile($event)" id="fileInput" />
                         </div>
                     </div>
-                    <div class="droparea-empty" v-else>
-                        <label for="fileInput" class="label">
-                            Click here to select and preview the file</label>
-                        <input ref="fileInput" type="file" @input="pickImagefile($event)" id="fileInput" />
-                    </div>
-                </div>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn plain color="#BF2600" @click="closeDialogForm()">cancel</v-btn>
-                    <v-btn plain color="#00875A">submit</v-btn>
-                </v-card-actions>
-            </form>
-        </v-card>
-    </v-dialog>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn plain color="#BF2600" @click="closeDialogForm()">cancel</v-btn>
+                        <v-btn plain color="#00875A" type="submit" @click="submitFormData()">submit</v-btn>
+                    </v-card-actions>
+                </form>
+            </v-card>
+        </v-dialog>
+        <v-overlay :value="showOverlayLoader">
+            <v-progress-circular indeterminate color="#5243AA" size="64"></v-progress-circular>
+        </v-overlay>
+    </div>
 </template>
 
 <script>
 
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
     props: {
@@ -52,12 +57,14 @@ export default {
     data() {
         return {
             formData: {},
-            inputFile: null,
-            existingFile: null,
+            inputedPreviewImage: null,
+            existingPreviewImage: null,
+            inputedFileObject: null,
+            mode: '',
         }
     },
     computed: {
-        ...mapGetters(["showDialogForm"]),
+        ...mapGetters(["showDialogForm", "showOverlayLoader"]),
     },
     watch: {
         showDialogForm(newValue) {
@@ -70,26 +77,60 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(["closeDialogForm"]),
+        ...mapMutations(["closeDialogForm", "openOverlayLoader"]),
+        ...mapActions("crud", ["postRoomStyles", "updateRoomStyles"]),
         setInitialFormData() {
-            this.formData = this.roomStyle
-            this.existingFile = this.roomStyle.thumbnail;
+            if (this.roomStyle) {
+                this.formData = JSON.parse(JSON.stringify(this.roomStyle));
+                this.existingPreviewImage = this.roomStyle.thumbnail;
+                this.mode = "edit";
+            } else {
+                this.existingPreviewImage = "";
+                this.mode = "new";
+            }
         },
         pickImagefile(e) {
             let inputedImage = e.target.files[0]
             if (inputedImage) {
-                this.inputFile = URL.createObjectURL(inputedImage)
+                this.inputedFileObject = inputedImage;
+                this.inputedPreviewImage = URL.createObjectURL(inputedImage);
             }
         },
         resetFormData() {
             this.formData = {}
         },
         removeImage() {
-            if (this.inputFile) {
-                this.inputFile = ""
-            } else if (this.existingFile) {
-                this.existingFile = ""
+            if (this.inputedPreviewImage) {
+                this.inputedPreviewImage = ""
+            } else if (this.existingPreviewImage) {
+                this.existingPreviewImage = ""
             }
+        },
+        submitFormData() {
+            this.openOverlayLoader();
+            let data = new FormData();
+            data.append('description', this.formData.description);
+            data.append('projectId', this.formData.projectId);
+            data.append('name', this.formData.name);
+            data.append('roomType', this.formData.roomType);
+            data.append('file', this.inputedFileObject);
+            if (this.mode == "new") {
+                this.postRoomStyles(data)
+                    .then((response) => {
+                        console.log(response)
+                        this.$emit('refresh');
+                    })
+            } else {
+                data.append('_id', this.formData._id);
+                console.log(...data)
+                this.updateRoomStyles(data)
+                    .then((response) => {
+                        console.log(response)
+                        this.$emit('refresh');
+                    })
+            }
+            this.closeDialogForm();
+            this.inputedFileObject = null;
         }
     }
 }
