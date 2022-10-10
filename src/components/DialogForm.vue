@@ -109,10 +109,10 @@ export default {
         submitFormData() {
             this.openOverlayLoader();
             let data = new FormData();
-            data.append('description', this.formData.description);
-            data.append('projectId', this.formData.projectId);
-            data.append('name', this.formData.name);
-            data.append('roomType', this.formData.roomType);
+            data.append('description', this.formData.description.trim());``
+            data.append('projectId', this.formData.projectId.trim());
+            data.append('name', this.formData.name.trim());
+            data.append('roomType', this.formData.roomType.trim());
             data.append('file', this.inputedFileObject);
             if (this.mode == "new") {
                 this.postRoomStyles(data)
