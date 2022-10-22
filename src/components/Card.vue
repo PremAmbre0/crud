@@ -5,13 +5,43 @@
             <v-card-title tag="div">
                 {{ name }}
             </v-card-title>
+        </v-card-actions>
+        <v-card-actions>
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on" @click.stop.prevent="$emit('delete')">
+                        <v-icon> mdi-delete</v-icon>
+                    </v-btn>
+                </template>
+                <span>Delete</span>
+            </v-tooltip>
             <v-spacer></v-spacer>
-            <v-btn icon @click.stop.prevent="$emit('delete')">
-                <v-icon> mdi-delete</v-icon>
-            </v-btn>
-            <v-btn icon @click.stop.prevent="$emit('openForm')"> 
-                <v-icon>  mdi-image-edit</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on" @click.stop.prevent="$emit('openForm')">
+                        <v-icon> mdi-image-edit</v-icon>
+                    </v-btn>
+                </template>
+                <span>Open Dialog</span>
+            </v-tooltip>
+            <v-spacer></v-spacer>
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on" @click.stop.prevent="$emit('moveRenders')">
+                        <v-icon> mdi-sync-circle</v-icon>
+                    </v-btn>
+                </template>
+                <span>Move renders</span>
+            </v-tooltip>
+            <v-spacer></v-spacer>
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on" @click.stop.prevent="$emit('publishOptions')">
+                        <v-icon> mdi-file-powerpoint-box</v-icon>
+                    </v-btn>
+                </template>
+                <span>Publish options (will publish all unpublish options)</span>
+            </v-tooltip>
         </v-card-actions>
         <!-- <v-card-text>
             {{roomStyle.description}}
@@ -23,7 +53,7 @@
 export default {
     props: {
         thumbnail: { type: String },
-        name: {  type: String }
+        name: { type: String }
     },
 }
 
@@ -34,7 +64,6 @@ export default {
     padding: 1rem 1rem 0 1rem;
 
     &__title {
-        max-width: 80%;
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
