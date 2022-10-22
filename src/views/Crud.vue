@@ -2,7 +2,8 @@
     <div>
         <div class="cards-container">
             <card v-for="roomStyle in roomStyles" :key="roomStyle._id" :name="roomStyle.name" :thumbnail="roomStyle.thumbnail" 
-                @openForm="openDialogForm() ; setSelectedRoomStyle(roomStyle)" @delete="deleteData(roomStyle._id)">
+                @openForm="openDialogForm() ; setSelectedRoomStyle(roomStyle)" @delete="deleteData(roomStyle._id)"
+                @moveRenders="moveRenders(roomStyle._id)" @publishOptions="publishOptions(roomStyle._id)">
             </card>
         </div>
         <v-btn class="add-thumbnail" fab dark color="indigo" @click="removeselectedTemplate() ; openDialogForm()">
@@ -37,7 +38,7 @@ export default {
     },
     methods: {
         ...mapMutations(["openDialogForm","openOverlayLoader"]),
-        ...mapActions("crud", ["getRoomStyles", "deleteRoomStyle"]),
+        ...mapActions("crud", ["getRoomStyles", "deleteRoomStyle","moveRenders","publishOptions"]),
         setSelectedRoomStyle(roomStyle) {
             this.selectedRoomStyle = roomStyle;
         },
@@ -58,6 +59,26 @@ export default {
                 }).then((response) => {
                     console.log(response)
                     this.getData();
+                });
+            }
+        },
+        moveRenders(id){
+            if (window.confirm("Are you sure you want to Move the renders")) {
+                this.openOverlayLoader();
+                this.moveRenders({
+                    _id: id
+                }).then((response) => {
+                    console.log(response)
+                });
+            }
+        },
+        publishOptions(id){
+            if (window.confirm("Will publish all un publish Options , Are you sure you want to perform this action?")) {
+                this.openOverlayLoader();
+                this.publishOptions({
+                    _id: id
+                }).then((response) => {
+                    console.log(response)
                 });
             }
         }

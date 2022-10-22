@@ -80,6 +80,37 @@ const actions = {
             console.error(error);
         })
     },
+    moveRenders: ({ dispatch }, data) => {
+        return dispatch(
+            "apiCall",
+            {
+                data: data,
+                method: "get",
+                uurl: `${apiEndPoint}RoomStyles/v1.0/update-fabric-renders/${data._id}`,
+                headers: {}
+            },
+            { root: true }
+        ).then((response) => {
+            return response.data;
+        }).catch((error) => {
+            console.error(error);
+        })
+    },
+    publishOptions: ({ dispatch }, data) => {
+        return dispatch(
+            "apiCall",
+            {
+                method: "put",
+                url: `${apiEndPoint}RoomStyles/v1.0/publish-options/${data._id}`,
+                headers: {}
+            },
+            { root: true }
+        ).then((response) => {
+            return response.data;
+        }).catch((error) => {
+            console.error(error);
+        })
+    },
 }
 export default {
     namespaced: true,
