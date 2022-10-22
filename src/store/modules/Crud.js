@@ -1,7 +1,7 @@
 
 
 
-const apiEndPoint = "https://56e2-103-173-241-213.in.ngrok.io/"
+const apiEndPoint = "https://fabricvis.foyr.com/"
 
 
 const state = {

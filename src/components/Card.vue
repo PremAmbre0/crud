@@ -22,8 +22,8 @@
 <script>
 export default {
     props: {
-        thumbnail: { required: true, type: String },
-        name: { required: true, type: String }
+        thumbnail: { type: String },
+        name: {  type: String }
     },
 }
 
