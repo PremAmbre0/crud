@@ -86,7 +86,7 @@ const actions = {
             {
                 data: data,
                 method: "get",
-                uurl: `${apiEndPoint}RoomStyles/v1.0/update-fabric-renders/${data._id}`,
+                uurl: `${apiEndPoint}PresetOptions/v1.0/update-fabric-renders/${data._id}`,
                 headers: {}
             },
             { root: true }
@@ -101,7 +101,7 @@ const actions = {
             "apiCall",
             {
                 method: "put",
-                url: `${apiEndPoint}RoomStyles/v1.0/publish-options/${data._id}`,
+                url: `${apiEndPoint}PresetOptions/v1.0/publish-options/${data._id}`,
                 headers: {}
             },
             { root: true }
