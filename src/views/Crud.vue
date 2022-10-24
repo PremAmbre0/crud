@@ -3,7 +3,7 @@
         <div class="cards-container">
             <card v-for="roomStyle in roomStyles" :key="roomStyle._id" :name="roomStyle.name" :thumbnail="roomStyle.thumbnail" 
                 @openForm="openDialogForm() ; setSelectedRoomStyle(roomStyle)" @delete="deleteData(roomStyle._id)"
-                @moveRenders="moveRenders(roomStyle._id)" @publishOptions="publishOptions(roomStyle._id)">
+                @moveRenders="handleMoveRenders(roomStyle._id)" @publishOptions="handlePublishOptions(roomStyle._id)">
             </card>
         </div>
         <v-btn class="add-thumbnail" fab dark color="indigo" @click="removeselectedTemplate() ; openDialogForm()">
@@ -62,7 +62,7 @@ export default {
                 });
             }
         },
-        moveRenders(id){
+        handleMoveRenders(id){
             if (window.confirm("Are you sure you want to Move the renders")) {
                 this.openOverlayLoader();
                 this.moveRenders({
@@ -72,7 +72,7 @@ export default {
                 });
             }
         },
-        publishOptions(id){
+        handlePublishOptions(id){
             if (window.confirm("Will publish all un publish Options , Are you sure you want to perform this action?")) {
                 this.openOverlayLoader();
                 this.publishOptions({
