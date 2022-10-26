@@ -86,7 +86,7 @@ const actions = {
             {
                 data: data,
                 method: "get",
-                uurl: `${apiEndPoint}PresetOptions/v1.0/update-fabric-renders/${data._id}`,
+                url: `${apiEndPoint}Fabrics/v1.0/update-fabric-renders/${data._id}`,
                 headers: {}
             },
             { root: true }
