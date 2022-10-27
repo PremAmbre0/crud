@@ -9,9 +9,11 @@
                 <v-btn-toggle mandatory v-model="handleToggleRoomstyle">
                     <v-btn @click="() => {
                         this.toggleDisableRoomstyle = true;
+                        this.updateIsDisabledRoomStyleProperty()
                     }">Disabled</v-btn>
                     <v-btn @click="() => {
                         this.toggleDisableRoomstyle = false;
+                        this.updateIsDisabledRoomStyleProperty()
                     }">Enabled</v-btn>
                 </v-btn-toggle>
             </v-card-actions>
@@ -74,8 +76,7 @@ export default {
             handleToggleRoomstyle: null,
         }
     },
-    Mounted() {
-        console.log(this.roomStyleDisabled)
+    beforeMount() {
         if (this.roomStyleDisabled == false) {
             this.toggleDisableRoomstyle = false;
             this.handleToggleRoomstyle = 1;
@@ -93,11 +94,6 @@ export default {
     },
     computed: {
         ...mapGetters(["showOverlayLoader"]),
-    },
-    watch: {
-        toggleDisableRoomstyle() {
-            this.updateIsDisabledRoomStyleProperty()
-        }
     },
     methods: {
         ...mapMutations(["openOverlayLoader"]),
