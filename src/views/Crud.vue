@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="cards-container">
-            <card v-for="roomStyle in roomStyles" :key="roomStyle._id" :name="roomStyle.name" :thumbnail="roomStyle.thumbnail" 
+            <card v-for="roomStyle in roomStyles" :key="roomStyle._id" :name="roomStyle.name" :thumbnail="roomStyle.thumbnail" :roomStyleDisabled="roomStyle.isDisabled" :id="roomStyle._id"
                 @openForm="openDialogForm() ; setSelectedRoomStyle(roomStyle)" @delete="deleteData(roomStyle._id)"
                 @moveRenders="handleMoveRenders(roomStyle._id)" @publishOptions="handlePublishOptions(roomStyle._id)">
             </card>
