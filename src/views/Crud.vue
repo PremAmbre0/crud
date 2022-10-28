@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="grouping-container" v-for="roomType in roomsGroupedByRoomStyles" :key="roomType">
-            <div class="grouping-container-category">{{roomType+`(${roomsGroupedByRoomStyles[roomType].length})`}}</div>
+            <div class="grouping-container-category">{{ roomType + `(${roomsGroupedByRoomStyles[roomType].length})` }}
+            </div>
             <div class="cards-container">
                 <card v-for="roomStyle in  roomsGroupedByRoomStyles[roomType]" :key="roomStyle._id"
                     :name="roomStyle.name" :thumbnail="roomStyle.thumbnail" :roomStyleDisabled="roomStyle.isDisabled"
@@ -90,6 +91,7 @@ export default {
             }
         },
         groupingByRoomType() {
+            if (this.roomsGroupedByRoomStyles) this.roomsGroupedByRoomStyles = [];
             this.roomStyles.forEach((room) => {
                 if (this.roomsGroupedByRoomStyles.includes(room.roomType)) {
                     this.roomsGroupedByRoomStyles[room.roomType].push(room)
@@ -106,14 +108,16 @@ export default {
 
 
 <style lang="scss" scoped>
-.grouping-container{
+.grouping-container {
     margin: 2rem auto 0 auto;
     max-width: 90vw;
-    &-category{
+
+    &-category {
         font-size: 1.6rem;
         font-weight: 500;
     }
 }
+
 .cards-container {
     margin: 1rem auto;
     max-width: 90vw;

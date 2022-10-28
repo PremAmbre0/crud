@@ -1,8 +1,8 @@
 
 
 
-const apiEndPoint = "https://fabricvis.foyr.com/"
-// const apiEndPoint = "https://e5bf-169-150-207-110.in.ngrok.io/"
+// const apiEndPoint = "https://fabricvis.foyr.com/"
+const apiEndPoint = "https://e5bf-169-150-207-110.in.ngrok.io/"
 
 
 const state = {
@@ -49,22 +49,27 @@ const actions = {
             { root: true }
         ).then((response) => {
             commit("openSnackbar", {
-                text: "Sucesssfully uploaded the room",
+                text: "Sucesssfully created the room",
                 type: "success",
             }, { root: true });
             return response.data;
         }).catch((error) => {
-            const errObj =  error.response.data;
-            console.log(errObj);
-            let  err = '';
-                if (Object.prototype.hasOwnProperty.call(errObj, "errorFields")){
-                let firstError = Object.keys(errObj.errorFields)[0]
-                err = errObj.errorFields[firstError]
+            if (error.response) {
+                const errObj = error.response.data
+                let err = '';
+                if (Object.prototype.hasOwnProperty.call(errObj, "errorFields")) {
+                    let firstError = Object.keys(errObj.errorFields)[0]
+                    err = errObj.errorFields[firstError]
+                }
+                else if (Object.prototype.hasOwnProperty.call(errObj, "message")) {
+                    err = errObj.message
+                }
+                commit("openSnackbar", {
+                    text: err ? err : "Failed to upload, please try again!",
+                    type: "error",
+                }, { root: true });
             }
-            commit("openSnackbar", {
-                text: err ? err : "Failed to upload, please try again!",
-                type: "error",
-            }, { root: true });
+
         })
     },
     updateRoomStyles: ({ commit, dispatch }, data) => {
@@ -85,10 +90,21 @@ const actions = {
             return response.data;
         }).catch((error) => {
             console.error(error);
-            commit("openSnackbar", {
-                text: "Failed to update your changes, please try again!",
-                type: "error",
-            }, { root: true });
+            if (error.response) {
+                const errObj = error.response.data
+                let err = '';
+                if (Object.prototype.hasOwnProperty.call(errObj, "errorFields")) {
+                    let firstError = Object.keys(errObj.errorFields)[0]
+                    err = errObj.errorFields[firstError]
+                }
+                else if (Object.prototype.hasOwnProperty.call(errObj, "message")) {
+                    err = errObj.message
+                }
+                commit("openSnackbar", {
+                    text: err ? err : "Failed to update your changes, please try again!",
+                    type: "error",
+                }, { root: true });
+            }
         })
     },
     deleteRoomStyle: ({ commit, dispatch }, data) => {

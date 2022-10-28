@@ -116,9 +116,9 @@ export default {
         submitFormData() {
             this.openOverlayLoader();
             let data = new FormData();
-            this.formData.description ? data.append('description', this.formData.description.trim()) :  data.append('description', this.formData.description) 
+            this.formData.description ? data.append('description', this.formData.description.trim()) :  data.append('description', "") 
             this.formData.projectId ? data.append('projectId', this.formData.projectId.trim()) : data.append('projectId', this.formData.projectId);
-            this.formData.name ? data.append('name', this.formData.name.trim()) : data.append('name', this.formData.name);
+            this.formData.name ? data.append('name', this.formData.name.trim()) : data.append('name', "");
             this.formData.roomType ? data.append('roomType', this.formData.roomType.trim()) : data.append('roomType', this.formData.roomType);
             data.append('file', this.inputedFileObject);
             if (this.mode == "new") {
