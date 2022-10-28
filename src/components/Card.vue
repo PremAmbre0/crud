@@ -18,11 +18,9 @@
                 </v-btn-toggle>
             </v-card-actions>
             <v-img :src="thumbnail" contain height="200px"></v-img>
-            <v-card-actions height="50px">
                 <v-card-title tag="div">
-                    {{ name }}
+                    {{ name ? name : "   "}}
                 </v-card-title>
-            </v-card-actions>
             <v-card-actions>
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
