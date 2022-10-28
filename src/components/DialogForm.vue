@@ -2,14 +2,15 @@
     <div>
         <v-dialog v-model="showDialogForm" max-width="600" persistent>
             <v-card max-width="600">
-                <form @submit.prevent>
-                    <v-text-field width="50vw" outlined placeholder="name" label="name" v-model="formData.name">
+                <v-form @submit.prevent>
+                    <v-text-field width="50vw" :rules="rules.notEmpty" required outlined placeholder="name" label="name"
+                        v-model="formData.name">
                     </v-text-field>
-                    <v-text-field width="50vw" outlined placeholder="projectId" label="projectId"
-                        v-model="formData.projectId">
+                    <v-text-field width="50vw" :rules="rules.notEmpty" required outlined placeholder="projectId"
+                        label="projectId" v-model="formData.projectId">
                     </v-text-field>
-                    <v-text-field width="50vw" outlined placeholder="roomType" label="roomType"
-                        v-model="formData.roomType">
+                    <v-text-field width="50vw" :rules="rules.notEmpty" required outlined placeholder="roomType"
+                        label="roomType" v-model="formData.roomType">
                     </v-text-field>
                     <v-textarea outlined name="input-7-4" label="Description" v-model="formData.description">
                     </v-textarea>
@@ -34,7 +35,7 @@
                         <v-btn plain color="#BF2600" @click="closeDialogForm()">cancel</v-btn>
                         <v-btn plain color="#00875A" type="submit" @click="submitFormData()">submit</v-btn>
                     </v-card-actions>
-                </form>
+                </v-form>
             </v-card>
         </v-dialog>
         <v-overlay :value="showOverlayLoader">
@@ -61,6 +62,9 @@ export default {
             existingPreviewImage: null,
             inputedFileObject: null,
             mode: '',
+            rules: {
+                notEmpty: [val => (val || '').length > 0 || 'This field is required'],
+            },
         }
     },
     computed: {
@@ -72,7 +76,10 @@ export default {
                 this.setInitialFormData();
             }
             if (newValue == false) {
-                this.resetFormData();
+                this.inputedFileObject = null;
+                this.inputedPreviewImage = null,
+                    this.existingPreviewImage = null,
+                    this.resetFormData();
             }
         }
     },
@@ -130,7 +137,6 @@ export default {
                     })
             }
             this.closeDialogForm();
-            this.inputedFileObject = null;
         }
     }
 }
