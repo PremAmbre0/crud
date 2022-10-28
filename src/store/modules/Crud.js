@@ -18,7 +18,7 @@ const mutations = {
 }
 
 const actions = {
-    getRoomStyles: ({ dispatch }) => {
+    getRoomStyles: ({ commit, dispatch }) => {
         return dispatch(
             "apiCall",
             {
@@ -31,9 +31,13 @@ const actions = {
             return response.data;
         }).catch((error) => {
             console.error(error);
+            commit("openSnackbar", {
+                text: "Something went wrong, refresh the page!",
+                type: "error",
+            }, { root: true });
         })
     },
-    postRoomStyles: ({ dispatch }, data) => {
+    postRoomStyles: ({ commit, dispatch }, data) => {
         return dispatch(
             "apiCall",
             {
@@ -44,12 +48,26 @@ const actions = {
             },
             { root: true }
         ).then((response) => {
+            commit("openSnackbar", {
+                text: "Sucesssfully uploaded the room",
+                type: "success",
+            }, { root: true });
             return response.data;
         }).catch((error) => {
-            console.error(error);
+            const errObj =  error.response.data;
+            console.log(errObj);
+            let  err = '';
+                if (Object.prototype.hasOwnProperty.call(errObj, "errorFields")){
+                let firstError = Object.keys(errObj.errorFields)[0]
+                err = errObj.errorFields[firstError]
+            }
+            commit("openSnackbar", {
+                text: err ? err : "Failed to upload, please try again!",
+                type: "error",
+            }, { root: true });
         })
     },
-    updateRoomStyles: ({ dispatch }, data) => {
+    updateRoomStyles: ({ commit, dispatch }, data) => {
         return dispatch(
             "apiCall",
             {
@@ -60,12 +78,20 @@ const actions = {
             },
             { root: true }
         ).then((response) => {
+            commit("openSnackbar", {
+                text: "Sucesssfully updated the room",
+                type: "success",
+            }, { root: true });
             return response.data;
         }).catch((error) => {
             console.error(error);
+            commit("openSnackbar", {
+                text: "Failed to update your changes, please try again!",
+                type: "error",
+            }, { root: true });
         })
     },
-    deleteRoomStyle: ({ dispatch }, data) => {
+    deleteRoomStyle: ({ commit, dispatch }, data) => {
         return dispatch(
             "apiCall",
             {
@@ -76,12 +102,20 @@ const actions = {
             },
             { root: true }
         ).then((response) => {
+            commit("openSnackbar", {
+                text: "Sucesssfully deleted the room",
+                type: "success",
+            }, { root: true });
             return response.data;
         }).catch((error) => {
             console.error(error);
+            commit("openSnackbar", {
+                text: "Failed to delete the room, please try again!",
+                type: "error",
+            }, { root: true });
         })
     },
-    moveRenders: ({ dispatch }, data) => {
+    moveRenders: ({ commit, dispatch }, data) => {
         return dispatch(
             "apiCall",
             {
@@ -92,12 +126,20 @@ const actions = {
             },
             { root: true }
         ).then((response) => {
+            commit("openSnackbar", {
+                text: "Renders moved sucesssfully ",
+                type: "success",
+            }, { root: true });
             return response.data;
         }).catch((error) => {
             console.error(error);
+            commit("openSnackbar", {
+                text: "Failed to move renders, please try again!",
+                type: "error",
+            }, { root: true });
         })
     },
-    publishOptions: ({ dispatch }, data) => {
+    publishOptions: ({ commit, dispatch }, data) => {
         return dispatch(
             "apiCall",
             {
@@ -107,9 +149,17 @@ const actions = {
             },
             { root: true }
         ).then((response) => {
+            commit("openSnackbar", {
+                text: "options published sucesssfully",
+                type: "success",
+            }, { root: true });
             return response.data;
         }).catch((error) => {
             console.error(error);
+            commit("openSnackbar", {
+                text: "Failed to publish options, please try again!",
+                type: "error",
+            }, { root: true });
         })
     },
 }

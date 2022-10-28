@@ -9,6 +9,10 @@ export default new Vuex.Store({
   state: {
     showDialogForm: false,
     showOverlayLoader: false,
+    snackbarState: false,
+    snackbarText: "",
+    snackbarTime: -1,
+    snackbarColor: "",
   },
   mutations: {
     openDialogForm(state) {
@@ -25,10 +29,33 @@ export default new Vuex.Store({
       console.log("open")
       state.showOverlayLoader = false;
     },
+    openSnackbar(state, { text = "", time = 3000, type = "" } = {}) {
+      state.snackbarTime = time;
+      state.snackbarText = text;
+      state.snackbarState = true;
+      switch (type) {
+        case "error":
+          state.snackbarColor = "#BF2600";
+          break;
+        case "success":
+          state.snackbarColor = "#00875A";
+          break;
+        case "":
+          state.snackbarColor = "#5243AA";
+          break;
+      }
+    },
+    closeSnackbar(state) {
+      state.snackbarState = false;
+    },
   },
   getters: {
     showDialogForm: (state) => state.showDialogForm,
     showOverlayLoader: (state) => state.showOverlayLoader,
+    snackbarState: (state) => state.snackbarState,
+    snackbarText: (state) => state.snackbarText,
+    snackbarTime: (state) => state.snackbarTime,
+    snackbarColor: (state) => state.snackbarColor,
   },
   actions: {
     apiCall({ commit }, config) {
@@ -43,6 +70,7 @@ export default new Vuex.Store({
           })
           .catch((err) => {
             reject(err);
+            commit("closeOverlayLoader");
           });
       })
     }, downloadFile(context, payload) {
