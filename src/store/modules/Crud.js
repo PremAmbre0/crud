@@ -1,8 +1,8 @@
 
 
 
-// const apiEndPoint = "https://fabricvis.foyr.com/"
-const apiEndPoint = "https://e5bf-169-150-207-110.in.ngrok.io/"
+const apiEndPoint = "https://fabricvis.foyr.com/"
+// const apiEndPoint = "https://e5bf-169-150-207-110.in.ngrok.io/"
 
 
 const state = {

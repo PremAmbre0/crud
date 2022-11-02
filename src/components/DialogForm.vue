@@ -14,6 +14,27 @@
                     </v-text-field>
                     <v-textarea outlined name="input-7-4" label="Description" v-model="formData.description">
                     </v-textarea>
+                    <v-combobox
+                        v-model="formData.allowedEmails"
+                        :items="formData.allowedEmails"
+                        :search-input.sync="search"
+                        hide-selected
+                        label="Add Allowed Emails"
+                        multiple
+                        persistent-hint
+                        small-chips
+                        clearable
+                    >
+                        <template v-slot:no-data>
+                            <v-list-item>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                No results matching "<strong>{{ search }}</strong>". Press <kbd>enter</kbd> to create a new one
+                                </v-list-item-title>
+                            </v-list-item-content>
+                            </v-list-item>
+                        </template>
+                    </v-combobox>
                     <div class="droparea" @dragover.prevent @drop.stop.prevent>
                         <div class="droparea-filled" v-if="existingPreviewImage || inputedPreviewImage">
                             <div class="file-wrapper">
@@ -65,6 +86,7 @@ export default {
             rules: {
                 notEmpty: [val => (val || '').length > 0 || 'This field is required'],
             },
+            search: null,
         }
     },
     computed: {
@@ -120,6 +142,7 @@ export default {
             this.formData.projectId ? data.append('projectId', this.formData.projectId.trim()) : data.append('projectId', this.formData.projectId);
             this.formData.name ? data.append('name', this.formData.name.trim()) : data.append('name', "");
             this.formData.roomType ? data.append('roomType', this.formData.roomType.trim()) : data.append('roomType', this.formData.roomType);
+            this.formData.allowedEmails ? data.append('allowedEmails', JSON.stringify(this.formData.allowedEmails)) : data.append('allowedEmails', JSON.stringify([]));
             data.append('file', this.inputedFileObject);
             if (this.mode == "new") {
                 this.postRoomStyles(data)
