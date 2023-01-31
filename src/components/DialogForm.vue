@@ -52,6 +52,7 @@
 							persistent-hint
 							small-chips
 							clearable
+							multiple
 							outlined
 						></v-autocomplete>
 					</template>
@@ -207,14 +208,22 @@ export default {
 				this.mode = "new";
 			}
 
-			for (const filter of this.fabricPresetFilters.properties) {
-				if (!this.formData[filter.formName]) {
+			if (!this.formData.roomFilters) {
+				for (const filter of this.fabricPresetFilters.properties) {
 					this.$set(
 						this.formData,
 						filter.formName,
 						filter.children.length > 0
-							? filter.children[0].formName
+							? [filter.children[0].formName]
 							: ""
+					);
+				}
+			} else if (this.formData.roomFilters) {
+				for (const filter of Object.keys(this.formData.roomFilters)) {
+					this.$set(
+						this.formData,
+						filter,
+						this.formData.roomFilters[filter]
 					);
 				}
 			}
@@ -258,14 +267,14 @@ export default {
 				  )
 				: data.append("allowedEmails", JSON.stringify([]));
 
+			let roomFilters = {};
 			for (const filter of this.fabricPresetFilters.properties) {
 				if (this.formData[filter.formName]) {
-					data.append(
-						filter.formName,
-						JSON.stringify(this.formData[filter.formName])
-					);
+					roomFilters[filter.formName] =
+						this.formData[filter.formName];
 				}
 			}
+			data.append("roomFilters", JSON.stringify(roomFilters));
 			data.append("file", this.inputedFileObject);
 			if (this.mode == "new") {
 				this.postRoomStyles(data).then((response) => {
