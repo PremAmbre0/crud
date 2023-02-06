@@ -217,7 +217,11 @@ const actions = {
 				data: data,
 				method: "get",
 				url: `${apiEndPoint}Fabrics/v1.0/update-fabric-renders/${data._id}`,
-				headers: {},
+				headers: {
+					Authorization:
+						"Bearer " +
+						window.localStorage.getItem("Authorization"),
+				},
 			},
 			{ root: true }
 		)
@@ -250,7 +254,11 @@ const actions = {
 			{
 				method: "put",
 				url: `${apiEndPoint}PresetOptions/v1.0/publish-options/${data._id}`,
-				headers: {},
+				headers: {
+					Authorization:
+						"Bearer " +
+						window.localStorage.getItem("Authorization"),
+				},
 			},
 			{ root: true }
 		)
