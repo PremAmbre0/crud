@@ -173,8 +173,9 @@ export default {
 	max-width: 90vw;
 	display: grid;
 	grid-column-gap: 1rem;
-	grid-row-gap: 2%;
+	grid-row-gap: 1.5rem;
 	grid-template-columns: repeat(2, 48%);
+	// grid-auto-rows: 50px;
 }
 
 .add-thumbnail {
@@ -185,7 +186,7 @@ export default {
 
 @media (max-width: 500px) {
 	.cards-container {
-		grid-row-gap: 2%;
+		grid-row-gap: 1.5rem;
 		grid-template-columns: 98%;
 	}
 }
@@ -193,7 +194,7 @@ export default {
 @media (min-width: 750px) {
 	.cards-container {
 		grid-column-gap: 2%;
-		grid-row-gap: 2%;
+		grid-row-gap: 1.5rem;
 		grid-template-columns: repeat(2, 48%);
 	}
 }
@@ -201,7 +202,7 @@ export default {
 @media (min-width: 1000px) {
 	.cards-container {
 		grid-column-gap: 2%;
-		grid-row-gap: 2%;
+		grid-row-gap: 1.5rem;
 		grid-template-columns: repeat(3, 31.33%);
 	}
 }
@@ -209,7 +210,7 @@ export default {
 @media (min-width: 1440px) {
 	.cards-container {
 		grid-column-gap: 2%;
-		grid-row-gap: 2%;
+		grid-row-gap: 1.5rem;
 		grid-template-columns: repeat(4, 23%);
 	}
 }
