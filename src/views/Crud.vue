@@ -14,7 +14,9 @@
 				<card
 					v-for="roomStyle in roomsGroupedByRoomStyles[roomType]"
 					:key="roomStyle._id"
-					:name="roomStyle.name"
+					:name="`${roomStyle.name} (${
+						moveRendersProgress[roomStyle._id]
+					})`"
 					:thumbnail="roomStyle.thumbnail"
 					:roomStyleDisabled="roomStyle.isDisabled"
 					:id="roomStyle._id"
@@ -69,6 +71,7 @@ export default {
 			roomStyles: null,
 			selectedRoomStyle: null,
 			roomsGroupedByRoomStyles: [],
+			moveRendersProgress: {},
 		};
 	},
 	beforeMount() {
@@ -95,8 +98,11 @@ export default {
 			this.selectedRoomStyle = null;
 		},
 		getData() {
-			console.log("hii");
 			this.getRoomStyles().then((data) => {
+				console.log(data);
+				for (let room of data) {
+					this.$set(this.moveRendersProgress, room._id, 0);
+				}
 				this.roomStyles = data;
 				this.groupingByRoomType();
 			});
@@ -151,7 +157,6 @@ export default {
 					];
 				}
 			});
-			console.log(this.roomsGroupedByRoomStyles);
 		},
 	},
 };
