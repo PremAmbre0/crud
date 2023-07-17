@@ -14,7 +14,9 @@
 				<card
 					v-for="roomStyle in roomsGroupedByRoomStyles[roomType]"
 					:key="roomStyle._id"
-					:name="roomStyle.name"
+					:name="`${roomStyle.name} (${
+						moveRendersProgress[roomStyle._id]
+					})`"
 					:thumbnail="roomStyle.thumbnail"
 					:roomStyleDisabled="roomStyle.isDisabled"
 					:id="roomStyle._id"
@@ -69,6 +71,7 @@ export default {
 			roomStyles: null,
 			selectedRoomStyle: null,
 			roomsGroupedByRoomStyles: [],
+			moveRendersProgress: {},
 		};
 	},
 	beforeMount() {
@@ -80,11 +83,16 @@ export default {
 		...mapGetters("crud", ["dynamicProperties"]),
 	},
 	methods: {
-		...mapMutations(["openDialogForm", "openOverlayLoader"]),
+		...mapMutations([
+			"openDialogForm",
+			"openOverlayLoader",
+			"openSnackbar",
+		]),
 		...mapActions("crud", [
 			"getRoomStyles",
 			"deleteRoomStyle",
 			"moveRenders",
+			"getMoveRenderProgress",
 			"publishOptions",
 			"fetchAllDynamicProperties",
 		]),
@@ -95,8 +103,10 @@ export default {
 			this.selectedRoomStyle = null;
 		},
 		getData() {
-			console.log("hii");
 			this.getRoomStyles().then((data) => {
+				for (let room of data) {
+					this.$set(this.moveRendersProgress, room._id, 0);
+				}
 				this.roomStyles = data;
 				this.groupingByRoomType();
 			});
@@ -120,9 +130,34 @@ export default {
 				this.moveRenders({
 					_id: id,
 				}).then((response) => {
-					console.log(response);
+					if (response && response.progress) {
+						this.moveRendersProgress[id] = response.progress;
+						this.fetchAndUpdateMoveRendersProgress(id);
+					}
 				});
 			}
+		},
+		fetchAndUpdateMoveRendersProgress(id) {
+			setTimeout(() => {
+				this.getMoveRenderProgress({
+					_id: id,
+				}).then((response) => {
+					if (response && response.progress) {
+						this.moveRendersProgress[id] = response.progress;
+						if (response.progress < 100) {
+							this.fetchAndUpdateMoveRendersProgress(id);
+						} else {
+							this.moveRendersProgress[id] = response.progress;
+							this.openSnackbar({
+								text: "Renders moved sucesssfully for " + id,
+								type: "success",
+							});
+						}
+					} else {
+						this.moveRendersProgress[id] = 0;
+					}
+				});
+			}, 2500);
 		},
 		handlePublishOptions(id) {
 			if (
@@ -151,7 +186,6 @@ export default {
 					];
 				}
 			});
-			console.log(this.roomsGroupedByRoomStyles);
 		},
 	},
 };
@@ -173,8 +207,9 @@ export default {
 	max-width: 90vw;
 	display: grid;
 	grid-column-gap: 1rem;
-	grid-row-gap: 2%;
+	grid-row-gap: 1.5rem;
 	grid-template-columns: repeat(2, 48%);
+	// grid-auto-rows: 50px;
 }
 
 .add-thumbnail {
@@ -185,7 +220,7 @@ export default {
 
 @media (max-width: 500px) {
 	.cards-container {
-		grid-row-gap: 2%;
+		grid-row-gap: 1.5rem;
 		grid-template-columns: 98%;
 	}
 }
@@ -193,7 +228,7 @@ export default {
 @media (min-width: 750px) {
 	.cards-container {
 		grid-column-gap: 2%;
-		grid-row-gap: 2%;
+		grid-row-gap: 1.5rem;
 		grid-template-columns: repeat(2, 48%);
 	}
 }
@@ -201,7 +236,7 @@ export default {
 @media (min-width: 1000px) {
 	.cards-container {
 		grid-column-gap: 2%;
-		grid-row-gap: 2%;
+		grid-row-gap: 1.5rem;
 		grid-template-columns: repeat(3, 31.33%);
 	}
 }
@@ -209,7 +244,7 @@ export default {
 @media (min-width: 1440px) {
 	.cards-container {
 		grid-column-gap: 2%;
-		grid-row-gap: 2%;
+		grid-row-gap: 1.5rem;
 		grid-template-columns: repeat(4, 23%);
 	}
 }
