@@ -83,11 +83,16 @@ export default {
 		...mapGetters("crud", ["dynamicProperties"]),
 	},
 	methods: {
-		...mapMutations(["openDialogForm", "openOverlayLoader"]),
+		...mapMutations([
+			"openDialogForm",
+			"openOverlayLoader",
+			"openSnackbar",
+		]),
 		...mapActions("crud", [
 			"getRoomStyles",
 			"deleteRoomStyle",
 			"moveRenders",
+			"getMoveRenderProgress",
 			"publishOptions",
 			"fetchAllDynamicProperties",
 		]),
@@ -99,7 +104,6 @@ export default {
 		},
 		getData() {
 			this.getRoomStyles().then((data) => {
-				console.log(data);
 				for (let room of data) {
 					this.$set(this.moveRendersProgress, room._id, 0);
 				}
@@ -126,9 +130,34 @@ export default {
 				this.moveRenders({
 					_id: id,
 				}).then((response) => {
-					console.log(response);
+					if (response && response.progress) {
+						this.moveRendersProgress[id] = response.progress;
+						this.fetchAndUpdateMoveRendersProgress(id);
+					}
 				});
 			}
+		},
+		fetchAndUpdateMoveRendersProgress(id) {
+			setTimeout(() => {
+				this.getMoveRenderProgress({
+					_id: id,
+				}).then((response) => {
+					if (response && response.progress) {
+						this.moveRendersProgress[id] = response.progress;
+						if (response.progress < 100) {
+							this.fetchAndUpdateMoveRendersProgress(id);
+						} else {
+							this.moveRendersProgress[id] = response.progress;
+							this.openSnackbar({
+								text: "Renders moved sucesssfully for " + id,
+								type: "success",
+							});
+						}
+					} else {
+						this.moveRendersProgress[id] = 0;
+					}
+				});
+			}, 2500);
 		},
 		handlePublishOptions(id) {
 			if (

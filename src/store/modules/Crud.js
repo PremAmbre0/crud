@@ -248,6 +248,46 @@ const actions = {
 				);
 			});
 	},
+	getMoveRenderProgress: ({ commit, dispatch }, data) => {
+		return dispatch(
+			"apiCall",
+			{
+				data: data,
+				method: "get",
+				url: `${apiEndPoint}Fabrics/v1.0/fabric-render-progress/${data._id}`,
+				headers: {
+					Authorization:
+						"Bearer " +
+						window.localStorage.getItem("Authorization"),
+				},
+			},
+			{ root: true }
+		)
+			.then((response) => {
+				// commit(
+				// 	"openSnackbar",
+				// 	{
+				// 		text: "Renders moved sucesssfully ",
+				// 		type: "success",
+				// 	},
+				// 	{ root: true }
+				// );
+				return response.data;
+			})
+			.catch((error) => {
+				console.error(error);
+				commit(
+					"openSnackbar",
+					{
+						text:
+							"Failed to fetch move renders progress for " +
+							data._id,
+						type: "error",
+					},
+					{ root: true }
+				);
+			});
+	},
 	publishOptions: ({ commit, dispatch }, data) => {
 		return dispatch(
 			"apiCall",
