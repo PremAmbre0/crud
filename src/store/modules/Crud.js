@@ -229,7 +229,7 @@ const actions = {
 				commit(
 					"openSnackbar",
 					{
-						text: "Renders moved sucesssfully ",
+						text: "Started moving renders",
 						type: "success",
 					},
 					{ root: true }
