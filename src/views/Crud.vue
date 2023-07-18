@@ -130,7 +130,14 @@ export default {
 				this.moveRenders({
 					_id: id,
 				}).then((response) => {
-					if (response && response.progress) {
+					if (
+						response &&
+						Object.prototype.hasOwnProperty.call(
+							response,
+							"progress"
+						) &&
+						response.progress != "invalid"
+					) {
 						this.moveRendersProgress[id] = response.progress;
 						this.fetchAndUpdateMoveRendersProgress(id);
 					}
@@ -142,9 +149,18 @@ export default {
 				this.getMoveRenderProgress({
 					_id: id,
 				}).then((response) => {
-					if (response && response.progress) {
+					if (
+						response &&
+						Object.prototype.hasOwnProperty.call(
+							response,
+							"progress"
+						)
+					) {
 						this.moveRendersProgress[id] = response.progress;
-						if (response.progress < 100) {
+						if (
+							response.progress < 100 &&
+							response.progress != "invalid"
+						) {
 							this.fetchAndUpdateMoveRendersProgress(id);
 						} else {
 							this.moveRendersProgress[id] = response.progress;
@@ -155,6 +171,10 @@ export default {
 						}
 					} else {
 						this.moveRendersProgress[id] = 0;
+						this.openSnackbar({
+							text: "Failed to get render progress for " + id,
+							type: "error",
+						});
 					}
 				});
 			}, 2500);
