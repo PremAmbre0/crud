@@ -56,6 +56,38 @@
 							outlined
 						></v-autocomplete>
 					</template>
+					<div
+						v-if="formData.brightnessOverride"
+						class="brightness-override"
+					>
+						<v-text-field
+							:rules="rules.notEmpty"
+							required
+							outlined
+							placeholder="Day"
+							label="Day"
+							v-model="formData.brightnessOverride.day"
+						>
+						</v-text-field>
+						<v-text-field
+							:rules="rules.notEmpty"
+							required
+							outlined
+							placeholder="Evening"
+							label="Evening"
+							v-model="formData.brightnessOverride.evening"
+						>
+						</v-text-field>
+						<v-text-field
+							:rules="rules.notEmpty"
+							required
+							outlined
+							placeholder="Cloudy"
+							label="Cloudy"
+							v-model="formData.brightnessOverride.cloudy"
+						>
+						</v-text-field>
+					</div>
 					<v-combobox
 						v-model="formData.allowedEmails"
 						:items="formData.allowedEmails"
@@ -168,6 +200,11 @@ export default {
 				],
 			},
 			search: null,
+			defaultBrightnessOverride: {
+				day: 1.2,
+				evening: 0.8,
+				cloudy: 0.8,
+			},
 		};
 	},
 	computed: {
@@ -227,6 +264,22 @@ export default {
 					);
 				}
 			}
+
+			if (!this.formData.brightnessOverride) {
+				this.$set(
+					this.formData,
+					"brightnessOverride",
+					this.defaultBrightnessOverride
+				);
+			} else {
+				this.$set(
+					this.formData,
+					"brightnessOverride",
+					this.formData.brightnessOverride
+				);
+			}
+
+			console.log(this.formData);
 		},
 		pickImagefile(e) {
 			let inputedImage = e.target.files[0];
@@ -275,6 +328,15 @@ export default {
 				}
 			}
 			data.append("roomFilters", JSON.stringify(roomFilters));
+			this.formData.brightnessOverride
+				? data.append(
+						"brightnessOverride",
+						JSON.stringify(this.formData.brightnessOverride)
+				  )
+				: data.append(
+						"brightnessOverride",
+						JSON.stringify(this.defaultBrightnessOverride)
+				  );
 			data.append("file", this.inputedFileObject);
 			if (this.mode == "new") {
 				this.postRoomStyles(data).then((response) => {
@@ -300,6 +362,11 @@ export default {
 	padding: 5%;
 }
 
+.brightness-override {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 0 1rem;
+}
 .droparea {
 	display: block;
 	height: 50vh;
