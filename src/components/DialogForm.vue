@@ -226,9 +226,9 @@ export default {
 			}
 			if (newValue == false) {
 				this.inputedFileObject = null;
-				(this.inputedPreviewImage = null),
-					(this.existingPreviewImage = null),
-					this.resetFormData();
+				this.inputedPreviewImage = null;
+				this.existingPreviewImage = null;
+				this.resetFormData();
 			}
 		},
 	},
@@ -269,7 +269,7 @@ export default {
 				this.$set(
 					this.formData,
 					"brightnessOverride",
-					this.defaultBrightnessOverride
+					JSON.parse(JSON.stringify(this.defaultBrightnessOverride))
 				);
 			} else {
 				this.$set(
